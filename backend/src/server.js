@@ -24,7 +24,8 @@ const registrationRoutes = require('./routes/registrationRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const postRoutes = require('./routes/postRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
-const teamRoutes = require('./routes/teamRoutes');
+const teamRoutes   = require('./routes/teamRoutes');
+const chatRoutes   = require('./routes/chatRoutes');
 
 // Connect to MongoDB
 connectDB();
@@ -103,7 +104,8 @@ app.use(`${API}/registrations`, registrationRoutes);
 app.use(`${API}/admin`, adminRoutes);
 app.use(`${API}/posts`, postRoutes);
 app.use(`${API}/reviews`, reviewRoutes);
-app.use(`${API}/teams`, teamRoutes);
+app.use(`${API}/teams`,   teamRoutes);
+app.use(`${API}/chat`,    chatRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -137,21 +139,37 @@ io.on('connection', (socket) => {
   // Join tournament room for live updates
   socket.on('join_tournament', (tournamentId) => {
     socket.join(`tournament_${tournamentId}`);
-    logger.info(`Socket ${socket.id} joined tournament room: ${tournamentId}`);
   });
-
   socket.on('leave_tournament', (tournamentId) => {
     socket.leave(`tournament_${tournamentId}`);
+  });
+
+  // Join personal user room (for chat notifications)
+  socket.on('join_user', (userId) => {
+    socket.join(`user_${userId}`);
+  });
+
+  // Join a chat conversation room
+  socket.on('join_chat', (conversationId) => {
+    socket.join(`chat_${conversationId}`);
+  });
+  socket.on('leave_chat', (conversationId) => {
+    socket.leave(`chat_${conversationId}`);
+  });
+
+  // Typing indicator
+  socket.on('typing', ({ conversationId, userId }) => {
+    socket.to(`chat_${conversationId}`).emit('user_typing', { userId });
+  });
+  socket.on('stop_typing', ({ conversationId, userId }) => {
+    socket.to(`chat_${conversationId}`).emit('user_stop_typing', { userId });
   });
 
   // Organiser updates live score → broadcast to all in room
   socket.on('live_score_update', (data) => {
     const { tournamentId, matchIndex, liveScore, team1Score, team2Score } = data;
     io.to(`tournament_${tournamentId}`).emit('score_updated', {
-      matchIndex,
-      liveScore,
-      team1Score,
-      team2Score,
+      matchIndex, liveScore, team1Score, team2Score,
     });
   });
 

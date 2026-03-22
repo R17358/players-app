@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { tournamentAPI, registrationAPI } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import { formatDate, formatDateTime, formatCurrency, statusConfig, sportEmoji, openRazorpay } from '../../utils/helpers';
+import { ReviewModal, ReviewsSection } from '../../components/common/ReviewSection';
 import toast from 'react-hot-toast';
 import './TournamentDetailPage.css';
+import '../../components/common/ReviewSection.css';
 
 export default function TournamentDetailPage() {
   const { slugOrId } = useParams();
-  const { user }     = useNavigate() && useParams() && useState(null);
   const { user: me } = useAuth();
   const navigate     = useNavigate();
 
@@ -16,7 +17,8 @@ export default function TournamentDetailPage() {
   const [loading, setLoading] = useState(true);
   const [regLoading, setRL]   = useState(false);
   const [tab, setTab]         = useState('info');
-  const [showRegModal, setRegModal] = useState(false);
+  const [showRegModal, setRegModal]     = useState(false);
+  const [showReviewModal, setReviewModal] = useState(false);
 
   useEffect(() => {
     tournamentAPI.getOne(slugOrId)
@@ -100,9 +102,9 @@ export default function TournamentDetailPage() {
         <div className="td-main">
           {/* Tabs */}
           <div className="tab-bar" style={{ marginBottom: 20 }}>
-            {['info','bracket','rules'].map(tb => (
+            {['info','bracket','rules','reviews'].map(tb => (
               <button key={tb} className={`tab-btn ${tab === tb ? 'active' : ''}`} onClick={() => setTab(tb)}>
-                {tb === 'info' ? 'ℹ️ Info' : tb === 'bracket' ? '🔢 Bracket' : '📋 Rules'}
+                {tb === 'info' ? 'ℹ️ Info' : tb === 'bracket' ? '🔢 Bracket' : tb === 'rules' ? '📋 Rules' : '⭐ Reviews'}
               </button>
             ))}
           </div>
@@ -173,6 +175,20 @@ export default function TournamentDetailPage() {
               {t.rules?.length > 0
                 ? <ul className="rules-list">{t.rules.map((r, i) => <li key={i}>{r}</li>)}</ul>
                 : <div className="empty-state"><div className="es-icon">📋</div><h3>No rules listed</h3></div>}
+            </div>
+          )}
+
+          {tab === 'reviews' && (
+            <div className="anim-fadeIn">
+              {/* Leave review button for completed tournament participants */}
+              {t.status === 'completed' && me && t.userRegistration?.status === 'confirmed' && (
+                <div style={{marginBottom:20}}>
+                  <button className="btn btn-primary" onClick={() => setReviewModal(true)}>
+                    ⭐ Rate this Tournament
+                  </button>
+                </div>
+              )}
+              <ReviewsSection tournamentId={t._id} />
             </div>
           )}
         </div>
@@ -252,6 +268,15 @@ export default function TournamentDetailPage() {
           onClose={() => setRegModal(false)}
           onSubmit={handleRegister}
           loading={regLoading}
+        />
+      )}
+
+      {/* Review Modal */}
+      {showReviewModal && (
+        <ReviewModal
+          tournament={t}
+          onClose={() => setReviewModal(false)}
+          onSubmitted={() => setTab('reviews')}
         />
       )}
     </div>

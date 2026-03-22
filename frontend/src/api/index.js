@@ -110,7 +110,15 @@ export const teamAPI = {
   leave:       (id)   => api.delete(`/teams/${id}/leave`),
 };
 
-// ── Admin ─────────────────────────────────────────────────────────
+// ── Chat ──────────────────────────────────────────────────────────
+export const chatAPI = {
+  getConversations:    ()           => api.get('/chat/conversations'),
+  getOrCreate:         (userId)     => api.post('/chat/conversations', { userId }),
+  getMessages:         (id, params) => api.get(`/chat/conversations/${id}/messages`, { params }),
+  sendMessage:         (id, text)   => api.post(`/chat/conversations/${id}/messages`, { text }),
+  deleteMessage:       (id)         => api.delete(`/chat/messages/${id}`),
+  getTotalUnread:      ()           => api.get('/chat/unread'),
+};
 export const adminAPI = {
   getStats:       () => api.get('/admin/stats'),
   getPending:     () => api.get('/admin/tournaments/pending'),

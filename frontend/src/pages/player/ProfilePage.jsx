@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { userAPI, postAPI } from "../../api";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { userAPI, postAPI, chatAPI } from "../../api";
 import { useAuth } from "../../context/AuthContext";
 import {
   formatNumber,
@@ -12,6 +12,38 @@ import {
 } from "../../utils/helpers";
 import toast from "react-hot-toast";
 import "./ProfilePage.css";
+
+function MessageButton({ targetUserId }) {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const handleClick = async () => {
+    setLoading(true);
+    try {
+      const r = await chatAPI.getOrCreate(targetUserId);
+      navigate(`/chat/${r.data.data._id}`);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Cannot start chat");
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <button
+      className="btn btn-outline btn-sm"
+      onClick={handleClick}
+      disabled={loading}
+    >
+      {loading ? (
+        <span
+          className="spinner"
+          style={{ width: 14, height: 14, borderWidth: 2 }}
+        />
+      ) : (
+        "💬 Message"
+      )}
+    </button>
+  );
+}
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -170,12 +202,15 @@ export default function ProfilePage() {
                 ✏️ Edit Profile
               </Link>
             ) : (
-              <button
-                className={`btn btn-sm ${following ? "btn-outline" : "btn-blue"}`}
-                onClick={toggleFollow}
-              >
-                {following ? "✓ Following" : "+ Follow"}
-              </button>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  className={`btn btn-sm ${following ? "btn-outline" : "btn-blue"}`}
+                  onClick={toggleFollow}
+                >
+                  {following ? "✓ Following" : "+ Follow"}
+                </button>
+                {me && <MessageButton targetUserId={profile._id} />}
+              </div>
             )}
           </div>
         </div>

@@ -130,6 +130,9 @@ export default function OrganiserDashboard() {
                             {t.status === 'registration_open' && (
                               <Link to={`/organiser/manage/${t._id}`} className="btn btn-ghost btn-sm">Registrations</Link>
                             )}
+                            {t.status === 'ongoing' && (
+                              <Link to={`/organiser/manage/${t._id}`} className="btn btn-blue btn-sm">🔴 Live</Link>
+                            )}
                             {!['completed','cancelled'].includes(t.status) && (
                               <button className="btn btn-danger btn-sm" onClick={() => cancel(t._id)}>Cancel</button>
                             )}

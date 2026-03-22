@@ -1,0 +1,67 @@
+/* Star Rating */
+.star-rating { display: flex; gap: 4px; }
+.star {
+  cursor: pointer; color: var(--text-muted);
+  transition: color 0.15s, transform 0.1s;
+  user-select: none;
+}
+.star.filled { color: var(--accent); }
+.star:hover  { transform: scale(1.2); }
+.rating-label { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-family: var(--font-ui); }
+
+/* Category ratings */
+.category-ratings {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 14px; display: flex; flex-direction: column; gap: 10px;
+}
+.cat-rating-row { display: flex; align-items: center; justify-content: space-between; }
+.cat-label { font-size: 13px; color: var(--text-secondary); font-weight: 600; font-family: var(--font-ui); }
+
+/* Review modal */
+.review-modal { max-width: 520px; }
+.review-tournament-info {
+  background: var(--bg-elevated); border-radius: var(--r-md);
+  padding: 12px 16px; display: flex; flex-direction: column; gap: 4px;
+}
+.review-tournament-info strong { font-family: var(--font-ui); font-size: 14px; }
+
+/* Reviews section */
+.reviews-section { display: flex; flex-direction: column; gap: 14px; }
+.reviews-summary {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--bg-elevated); border-radius: var(--r-md);
+  padding: 16px 20px;
+}
+.rs-big-rating {
+  font-family: var(--font-display); font-size: 52px;
+  color: var(--accent); letter-spacing: 0.04em; line-height: 1;
+}
+.rs-stars { font-size: 20px; color: var(--accent); letter-spacing: 2px; }
+.rs-count { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+/* Review card */
+.review-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.rc-header { display: flex; align-items: flex-start; justify-content: space-between; }
+.rc-user   { display: flex; align-items: center; gap: 10px; }
+.rc-av {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--blue-dim); color: var(--blue);
+  font-family: var(--font-ui); font-weight: 800; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.rc-name   { font-size: 13px; font-weight: 700; font-family: var(--font-ui); }
+.rc-meta   { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; }
+.rc-rating-stars { font-size: 16px; color: var(--accent); letter-spacing: 1px; }
+.rc-title  { font-family: var(--font-ui); font-size: 14px; font-weight: 700; }
+.rc-comment { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.rc-cats   { display: flex; gap: 8px; flex-wrap: wrap; }
+.rc-cat-chip {
+  font-size: 11px; background: var(--bg-elevated);
+  border: 1px solid var(--border); border-radius: 50px;
+  padding: 3px 10px; color: var(--text-muted); text-transform: capitalize;
+  font-family: var(--font-ui); font-weight: 600;
+}

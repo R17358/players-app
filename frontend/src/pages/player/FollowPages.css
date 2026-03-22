@@ -1,0 +1,68 @@
+.follow-page { padding: 0 24px 60px; max-width: 680px; }
+
+/* Header */
+.follow-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 24px 0 20px; border-bottom: 1px solid var(--border);
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.follow-title-row {
+  display: flex; align-items: center; gap: 12px; flex: 1;
+}
+.follow-title {
+  font-family: var(--font-display); font-size: 28px;
+  letter-spacing: 0.04em; line-height: 1;
+}
+.follow-sub  { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.follow-sub strong { color: var(--text-primary); }
+.follow-count {
+  font-family: var(--font-display); font-size: 32px;
+  color: var(--accent); letter-spacing: 0.04em;
+  margin-left: auto;
+}
+
+/* Search */
+.follow-search { margin-bottom: 16px; }
+.follow-search .form-input { border-radius: 50px !important; }
+
+/* List */
+.follow-list { display: flex; flex-direction: column; gap: 10px; }
+
+/* User Row */
+.user-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+}
+.user-row-left {
+  display: flex; align-items: center; gap: 14px;
+  flex: 1; min-width: 0; text-decoration: none; color: inherit;
+}
+.ur-initials {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--blue-dim); color: var(--blue);
+  font-family: var(--font-ui); font-size: 16px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ur-initials.sm { width: 36px; height: 36px; font-size: 13px; }
+
+.ur-info    { flex: 1; min-width: 0; }
+.ur-name-row {
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap; margin-bottom: 2px;
+}
+.ur-name    { font-family: var(--font-ui); font-size: 14px; font-weight: 700; }
+.ur-username { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+.ur-meta    {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  font-size: 11px; color: var(--text-secondary);
+}
+
+.text-blue { color: var(--blue); text-decoration: none; }
+.text-blue:hover { text-decoration: underline; }
+
+@media (max-width: 500px) {
+  .follow-page   { padding: 0 14px 60px; }
+  .follow-header { gap: 10px; }
+  .follow-count  { display: none; }
+}

@@ -9,6 +9,7 @@ const navItems = [
   { to: '/tournaments',icon: '🏆', label: 'Tournaments'   },
   { to: '/leaderboard',icon: '📊', label: 'Leaderboard'   },
   { to: '/feed',       icon: '📰', label: 'Feed'          },
+  { to: '/chat',       icon: '💬', label: 'Messages'      },
 ];
 const playerItems = [
   { to: '/my-registrations', icon: '🎟️', label: 'My Registrations' },
@@ -24,10 +25,10 @@ export default function Sidebar() {
   const { user, isAdmin, isOrganiser } = useAuth();
   const [pendingTournaments, setPendingTournaments] = useState(0);
   const [pendingOrganisers,  setPendingOrganisers]  = useState(0);
+  const [chatUnread,         setChatUnread]         = useState(0);
 
   useEffect(() => {
     if (!isAdmin) return;
-    // Fetch pending counts for admin badges
     adminAPI.getPending()
       .then(r => setPendingTournaments(r.data.count || r.data.data?.length || 0))
       .catch(() => {});
@@ -38,6 +39,19 @@ export default function Sidebar() {
       })
       .catch(() => {});
   }, [isAdmin]);
+
+  useEffect(() => {
+    if (!user) return;
+    // Poll chat unread count every 30s
+    const fetchUnread = () => {
+      import('../../api').then(({ chatAPI }) => {
+        chatAPI.getTotalUnread().then(r => setChatUnread(r.data.data.total)).catch(() => {});
+      });
+    };
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   const adminItems = [
     { to: '/admin/dashboard', icon: '🛡️', label: 'Admin Panel'  },
@@ -53,6 +67,9 @@ export default function Sidebar() {
             <NavLink key={item.to} to={item.to} className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
               <span className="sidebar-icon">{item.icon}</span>
               <span className="sidebar-label">{item.label}</span>
+              {item.to === '/chat' && chatUnread > 0 && (
+                <span className="sidebar-badge">{chatUnread > 9 ? '9+' : chatUnread}</span>
+              )}
             </NavLink>
           ))}
         </div>
