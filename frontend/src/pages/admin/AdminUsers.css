@@ -1,0 +1,106 @@
+.admin-users-page { padding: 0 24px 60px; max-width: 1000px; }
+
+.au-header { padding: 28px 0 16px; display: flex; align-items: center; justify-content: space-between; }
+.au-title  { font-size: clamp(28px, 4vw, 44px); }
+.au-sub    { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+/* Tabs */
+.au-tabs {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 6px; margin-bottom: 16px;
+}
+.au-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--r-sm);
+  font-family: var(--font-ui); font-size: 13px; font-weight: 600;
+  color: var(--text-secondary); cursor: pointer; transition: all 0.18s;
+  position: relative;
+}
+.au-tab:hover  { background: var(--bg-card); color: var(--text-primary); }
+.au-tab.active { background: var(--blue-dim); color: var(--blue); }
+.au-tab-badge {
+  background: var(--red); color: #fff;
+  font-size: 10px; font-weight: 800; font-family: var(--font-ui);
+  min-width: 18px; height: 18px; border-radius: 50px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 5px; box-shadow: 0 0 8px var(--red);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Search */
+.au-search {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+}
+.au-search .form-input { max-width: 420px; border-radius: 50px !important; }
+
+/* Verify notice */
+.verify-notice {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: rgba(240,192,64,0.08); border: 1px solid var(--accent-border);
+  border-radius: var(--r-md); padding: 16px 18px; margin-bottom: 20px;
+  font-size: 20px;
+}
+.verify-notice div { flex: 1; }
+.verify-notice strong { font-family: var(--font-ui); font-size: 14px; color: var(--accent); display: block; margin-bottom: 4px; }
+.verify-notice p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+/* List */
+.au-list { display: flex; flex-direction: column; gap: 10px; }
+
+.au-card {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 18px; transition: border-color 0.2s;
+}
+.au-card:hover { border-color: var(--border-light); }
+.au-card-banned { opacity: 0.6; border-color: var(--red-dim) !important; }
+
+/* Avatar */
+.au-avatar-wrap { position: relative; flex-shrink: 0; }
+.au-avatar-initials {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--blue-dim); color: var(--blue);
+  font-family: var(--font-ui); font-size: 16px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.au-status-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  position: absolute; bottom: 1px; right: 1px;
+  border: 2px solid var(--bg-card);
+}
+.au-status-dot.active { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.au-status-dot.banned { background: var(--red); }
+
+/* Info */
+.au-card-left { display: flex; gap: 14px; align-items: flex-start; flex: 1; min-width: 0; }
+.au-info { flex: 1; min-width: 0; }
+.au-name-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 2px; }
+.au-name     { font-family: var(--font-ui); font-size: 15px; font-weight: 800; }
+.au-username { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+.au-meta {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  font-size: 11px; color: var(--text-secondary);
+}
+.au-org-info {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  font-size: 11px; color: var(--text-muted);
+  margin-top: 5px;
+}
+
+/* Actions */
+.au-actions { display: flex; gap: 8px; flex-direction: column; flex-shrink: 0; align-items: flex-end; }
+.verify-btn {
+  background: var(--green) !important; color: #000 !important;
+  box-shadow: 0 4px 16px rgba(29,216,122,0.3);
+  animation: glow 2s ease-in-out infinite;
+}
+.verify-btn:hover { background: #25f08a !important; transform: translateY(-2px); }
+.delete-btn { color: var(--text-muted) !important; }
+.delete-btn:hover { color: var(--red) !important; border-color: var(--red) !important; background: var(--red-dim) !important; }
+
+@media (max-width: 700px) {
+  .au-card { flex-direction: column; align-items: flex-start; }
+  .au-actions { flex-direction: row; width: 100%; }
+  .au-meta { gap: 8px; }
+}

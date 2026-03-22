@@ -49,16 +49,31 @@ app.use(cors({
 }));
 
 // Rate limiting
+const isDev = process.env.NODE_ENV !== 'production';
+
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200,
+  windowMs: 15 * 60 * 1000,
+  max: isDev ? 2000 : 300,           // much higher in dev
+  skip: (req) => {
+    // Skip rate limiting for localhost in development
+    const ip = req.ip || req.connection.remoteAddress;
+    return isDev && (ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1');
+  },
   message: { success: false, message: 'Too many requests. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: isDev ? 100 : 15,             // relaxed in dev
+  skip: (req) => {
+    const ip = req.ip || req.connection.remoteAddress;
+    return isDev && (ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1');
+  },
   message: { success: false, message: 'Too many auth attempts. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 app.use('/api/', limiter);

@@ -55,6 +55,21 @@ exports.register = asyncHandler(async (req, res, next) => {
   const template = emailTemplates.welcome(name);
   sendEmail({ to: email, ...template }).catch(() => {});
 
+  // If organiser: notify all admins
+  if (role === 'organiser') {
+    const User = require('../models/User');
+    User.find({ role: 'admin' }).then(admins => {
+      admins.forEach(admin => {
+        admin.addNotification({
+          title: '📋 New Organiser Registered',
+          message: `${name} (@${username}) has registered as an organiser and needs verification.`,
+          type: 'info',
+          link: '/admin/users',
+        }).catch(() => {});
+      });
+    }).catch(() => {});
+  }
+
   sendTokenResponse(user, 201, res, 'Account created successfully');
 });
 
