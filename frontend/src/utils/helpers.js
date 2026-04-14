@@ -69,21 +69,64 @@ export const winRateColor = (rate) => {
   return 'var(--red)';
 };
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if (window.Razorpay) return resolve(true);
+
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+
+    script.onload = () => {
+      console.log("Razorpay loaded ✅");
+      resolve(true);
+    };
+
+    script.onerror = () => {
+      console.log("Razorpay failed ❌");
+      resolve(false);
+    };
+
+    document.body.appendChild(script);
+  });
+};
+
 // Razorpay payment handler
-export const openRazorpay = (order, userInfo, onSuccess, onFailure) => {
+export const openRazorpay = async (order, userInfo, onSuccess, onFailure) => {
+
+  const isLoaded = await loadRazorpayScript();
+
+  if (!isLoaded) {
+    onFailure && onFailure("Payment system failed to load");
+    return;
+  }
+
   const options = {
-    key:          order.key,
-    amount:       order.amount,
-    currency:     order.currency,
-    name:         'SportVibe',
-    description:  'Tournament Registration',
-    order_id:     order.id,
-    prefill:      userInfo,
-    theme:        { color: '#3d8ef0' },
-    handler: (response) => onSuccess(response),
-    modal: { ondismiss: () => onFailure && onFailure('Payment cancelled') },
+    key: order.key,
+    amount: order.amount,
+    currency: order.currency,
+    name: 'SportVibe',
+    description: 'Tournament Registration',
+    order_id: order.id,
+    prefill: userInfo,
+    theme: { color: '#3d8ef0' },
+
+    handler: (response) => {
+      console.log("Payment success:", response);
+      onSuccess(response);
+    },
+
+    modal: {
+      ondismiss: () => onFailure && onFailure('Payment cancelled')
+    },
   };
+
   const rzp = new window.Razorpay(options);
-  rzp.on('payment.failed', (res) => onFailure && onFailure(res.error?.description));
+
+  rzp.on('payment.failed', (res) => {
+    console.log("Payment failed:", res);
+    onFailure && onFailure(res.error?.description);
+  });
+
   rzp.open();
 };
